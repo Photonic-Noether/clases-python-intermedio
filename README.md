@@ -190,33 +190,50 @@ git merge upstream/development
 git push origin development
 ```
 
-#### Método A — copiar solo el archivo de ejercicios
+#### Método A — copiar el archivo con `git show`
 
 ```bash
+# Estás en development. Copia el archivo de stubs con tu nombre:
 git show upstream/Clase_1:ejercicios/clase_1/ejercicios.py > ejercicios/clase_1/tu-nombre.py
-# implementa los ejercicios en tu-nombre.py
-# para testear, copia a la rama de clase:
+
+# Implementa los ejercicios en tu-nombre.py
+
+# Para testear, cambia temporalmente a la rama de clase:
 git stash
-git checkout upstream/Clase_1 -- .
+git checkout Clase_1
 cp ejercicios/clase_1/tu-nombre.py ejercicios/clase_1/ejercicios.py
 pytest                      # pyproject.toml configura todo automáticamente
 git checkout development
 git stash pop
 ```
 
-#### Método B — merge directo de la rama de clase
+#### Método B — trabajar en la rama de clase y copiar solo el resultado
+
+En este método implementas y testeas directamente en la rama de clase (donde ya están los tests), y al final copias **únicamente** el archivo de ejercicios a `development`.
 
 ```bash
-git merge upstream/Clase_1
-# renombra el archivo de stubs con tu nombre:
-mv ejercicios/clase_1/ejercicios.py ejercicios/clase_1/tu-nombre.py
-# implementa los ejercicios
-pytest                      # los tests ya están en tests/unit/ e integration/
+# 1. Crea una rama local de trabajo basada en la clase
+git fetch upstream
+git checkout -b trabajo-clase-1 upstream/Clase_1
+
+# 2. Implementa los ejercicios en ejercicios/clase_1/ejercicios.py
+
+# 3. Testea directamente — los tests ya están en tests/unit/ e integration/
+pytest
+
+# 4. Cuando todo pase, ve a development y trae SOLO el archivo de ejercicios
+git checkout development
+git checkout trabajo-clase-1 -- ejercicios/clase_1/ejercicios.py
+
+# 5. Renómbralo con tu nombre (la PR solo incluirá este archivo)
+cp ejercicios/clase_1/ejercicios.py ejercicios/clase_1/tu-nombre.py
+git restore --staged ejercicios/clase_1/ejercicios.py
+rm ejercicios/clase_1/ejercicios.py
 ```
 
-> El Método B trae también `apuntes.py`, `tests/` y `codigo/` a tu development. La PR los incluirá, lo que está bien.
+> `git checkout rama -- ruta/archivo` trae **únicamente ese archivo** desde otra rama al directorio de trabajo, sin hacer un merge completo. La PR a `upstream/development` solo contendrá `tu-nombre.py`.
 
-**Commit y push:**
+**Commit y push (igual para ambos métodos):**
 
 ```bash
 git add ejercicios/clase_1/tu-nombre.py
