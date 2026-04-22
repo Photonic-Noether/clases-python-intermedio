@@ -1,5 +1,5 @@
 import pytest
-from ejercicios import validar_version, incrementar_version, parsear_commits
+from ejercicios.clase_1.ejercicios import validar_version, incrementar_version, parsear_commits
 
 
 # ── Tests de validar_version ─────────────────────────────────
