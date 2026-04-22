@@ -1,5 +1,5 @@
 import pytest
-from ejercicios import FibonacciIterador, aplanar, ventana_deslizante
+from ejercicios.clase_3.ejercicios import FibonacciIterador, aplanar, ventana_deslizante
 
 
 # ── Tests de FibonacciIterador ────────────────────────────────
