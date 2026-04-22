@@ -151,60 +151,89 @@ Las entregas se hacen mediante **Pull Request de `tu-fork/development` a `upstre
 
 La rama `main` está protegida: solo el profesor puede escribir en ella. La rama `development` es la rama de integración diseñada para recibir vuestras entregas.
 
-### Estructura de entregas
+### Cómo quedan los ejercicios en el repositorio
 
-En `development` hay una carpeta `ejercicios/` con una subcarpeta por clase:
+Cada alumno añade **su propio archivo** con su nombre — nunca toca los de los demás. Por eso nunca hay conflictos de merge entre PRs.
 
 ```
-ejercicios/
-├── clase_1/   ← deposita aquí tu archivo para la Clase 1
-├── clase_2/
-├── clase_3/
-├── clase_4/
-├── clase_5/
-├── clase_6/
-├── clase_7/
-└── clase_8/
+upstream/development
+└── ejercicios/
+    ├── clase_1/
+    │   ├── .gitkeep           ← placeholder del profesor
+    │   ├── juan-garcia.py     ← PR de Juan
+    │   ├── ana-lopez.py       ← PR de Ana
+    │   └── marta-ruiz.py      ← PR de Marta
+    ├── clase_2/
+    │   ├── .gitkeep
+    │   ├── juan-garcia.py
+    │   └── ana-lopez.py
+    ├── clase_3/
+    │   ├── .gitkeep
+    │   └── juan-garcia.py
+    ...
+
+rama Clase_3 (separada)
+└── ejercicios/clase_3/
+    └── ejercicios.py          ← stubs del profesor (punto de partida)
 ```
 
-### Flujo completo de entrega
+`ejercicios.py` (Clase_3) y `juan-garcia.py` (development) son nombres distintos en la misma carpeta — git los combina sin conflicto.
+
+### Flujo de entrega — dos métodos equivalentes
+
+**Sincroniza tu fork antes de empezar:**
 
 ```bash
-# 1. Sincroniza tu fork con el repositorio original
 git fetch upstream
 git checkout development
 git merge upstream/development
 git push origin development
+```
 
-# 2. Obtén el archivo de ejercicios de la clase
-git show Clase_1:ejercicios/clase_1/ejercicios.py > ejercicios/clase_1/tu-nombre.py
+#### Método A — copiar solo el archivo de ejercicios
 
-# 3. Implementa los ejercicios en ejercicios/clase_1/tu-nombre.py
-
-# 4. Comprueba que los tests pasan (cambia temporalmente a la rama de clase)
+```bash
+git show upstream/Clase_1:ejercicios/clase_1/ejercicios.py > ejercicios/clase_1/tu-nombre.py
+# implementa los ejercicios en tu-nombre.py
+# para testear, copia a la rama de clase:
 git stash
-git checkout Clase_1
+git checkout upstream/Clase_1 -- .
 cp ejercicios/clase_1/tu-nombre.py ejercicios/clase_1/ejercicios.py
-pytest            # pyproject.toml lo configura todo automáticamente
+pytest                      # pyproject.toml configura todo automáticamente
 git checkout development
 git stash pop
+```
 
-# 5. Haz commit y sube a tu fork
+#### Método B — merge directo de la rama de clase
+
+```bash
+git merge upstream/Clase_1
+# renombra el archivo de stubs con tu nombre:
+mv ejercicios/clase_1/ejercicios.py ejercicios/clase_1/tu-nombre.py
+# implementa los ejercicios
+pytest                      # los tests ya están en tests/unit/ e integration/
+```
+
+> El Método B trae también `apuntes.py`, `tests/` y `codigo/` a tu development. La PR los incluirá, lo que está bien.
+
+**Commit y push:**
+
+```bash
 git add ejercicios/clase_1/tu-nombre.py
 git commit -m "Clase 1: ejercicios - tu-nombre"
 git push origin development
 ```
 
-Luego ve a tu fork en GitHub y abre la Pull Request. Asegúrate de que el destino es `development`, **no `main`**.
+Abre la Pull Request en GitHub. Destino: `upstream/development`, **no `main`**.
 
 **Normas de entrega:**
-- El archivo se llama `tu-nombre.py` (sin espacios ni tildes)
+- El archivo se llama `tu-nombre.py` (sin espacios ni tildes) — p.ej. `juan-garcia.py`
 - Va en la subcarpeta correcta: `ejercicios/clase_N/`
 - La PR va de `tu-fork/development` → `upstream/development`
-- Asegúrate de que los tests pasan antes de abrir la PR
+- Asegúrate de que `pytest` pasa antes de abrir la PR
 - No toques los archivos de otros alumnos
 
-Para la guía completa del flujo fork+PR, consulta el README de la rama `development`.
+La guía completa con todos los pasos está en el README de la rama `development`.
 
 ---
 
