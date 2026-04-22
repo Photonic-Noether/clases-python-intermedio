@@ -1,1 +1,0 @@
-Extender la clase Markdown del paquete python-markdown para crear de forma sencilla un indice en un documento Markdown
