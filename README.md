@@ -110,42 +110,49 @@ pip install -r requirements.txt
 
 Tienes dos métodos equivalentes para obtener los ejercicios y testearlos. Elige el que prefieras.
 
-#### Método A — copiar solo el archivo de ejercicios
+#### Método A — copiar el archivo con `git show`
 
 ```bash
-# Obtén el archivo de ejercicios desde la rama de clase
+# Estás en development. Copia el archivo de stubs con tu nombre:
 git fetch upstream
 git show upstream/Clase_1:ejercicios/clase_1/ejercicios.py > ejercicios/clase_1/tu-nombre.py
 
-# Implementa los ejercicios en ese archivo
+# Implementa los ejercicios en tu-nombre.py
 
-# Para testear, copia temporalmente a la rama de clase y ejecuta pytest:
+# Para testear, cambia temporalmente a la rama de clase:
 git stash
-git checkout upstream/Clase_1 -- .   # trae todos los archivos de clase al área de trabajo
+git checkout Clase_1
 cp ejercicios/clase_1/tu-nombre.py ejercicios/clase_1/ejercicios.py
-pytest                                # encuentra tests/ automáticamente gracias a pyproject.toml
-git checkout development              # vuelve a development
+pytest                      # pyproject.toml configura todo automáticamente
+git checkout development
 git stash pop
 ```
 
-#### Método B — merge directo de la rama de clase
+#### Método B — trabajar en la rama de clase y copiar solo el resultado
+
+Implementas y testeas directamente en la rama de clase (donde ya están los tests). Al final copias **únicamente** el archivo de ejercicios a `development`, sin ensuciar la rama con archivos que no corresponden.
 
 ```bash
-# Trae todos los archivos de clase (apuntes, tests, código) a tu development
+# 1. Crea una rama local de trabajo basada en la clase
 git fetch upstream
-git checkout development
-git merge upstream/Clase_1
+git checkout -b trabajo-clase-1 upstream/Clase_1
 
-# El archivo de stubs ya está en ejercicios/clase_1/ejercicios.py — renómbralo
-mv ejercicios/clase_1/ejercicios.py ejercicios/clase_1/tu-nombre.py
+# 2. Implementa los ejercicios en ejercicios/clase_1/ejercicios.py
 
-# Implementa los ejercicios en tu-nombre.py
-
-# Los tests están en tests/unit/ y tests/integration/ — ejecuta directamente:
+# 3. Testea directamente — los tests ya están en tests/unit/ e integration/
 pytest
+
+# 4. Cuando todo pase, ve a development y trae SOLO el archivo de ejercicios
+git checkout development
+git checkout trabajo-clase-1 -- ejercicios/clase_1/ejercicios.py
+
+# 5. Renómbralo con tu nombre y elimina el original
+cp ejercicios/clase_1/ejercicios.py ejercicios/clase_1/tu-nombre.py
+git restore --staged ejercicios/clase_1/ejercicios.py
+rm ejercicios/clase_1/ejercicios.py
 ```
 
-> **Nota sobre el Método B:** el merge trae también `apuntes.py`, `tests/` y `codigo/` a tu rama `development`. La PR incluirá esos archivos, lo que está bien — el profesor sabe ignorarlos y solo revisa `ejercicios/clase_N/tu-nombre.py`.
+> `git checkout rama -- ruta/archivo` trae **únicamente ese archivo** desde otra rama, sin hacer merge. La PR a `upstream/development` solo contendrá `tu-nombre.py`.
 
 ---
 
