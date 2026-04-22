@@ -2,8 +2,8 @@
 
 > **Antes de mirar el código, actualiza esta rama:**
 > ```bash
-> git fetch origin
-> git reset --hard origin/Clase_2
+> git fetch upstream
+> git reset --hard upstream/Clase_2
 > ```
 > Si hiciste commits accidentales, `git pull` fallará. Este par de comandos siempre funciona.
 
@@ -17,6 +17,33 @@ Esta rama cubre programación funcional avanzada (`functools`, `map`, `filter`, 
 git checkout Clase_1   # Ir a la clase anterior
 git checkout Clase_3   # Ir a la siguiente clase
 ```
+
+## Configuración del entorno
+
+La primera vez que trabajes en este repositorio:
+
+```bash
+python -m venv .venv
+```
+
+Actívalo (hazlo una vez por sesión de terminal):
+
+```bash
+# Windows
+.venv\ Scripts\activate
+
+# Mac/Linux
+source .venv/bin/activate
+```
+
+Instala las dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+El entorno virtual vive en `.venv/` y no se sube a Git.
+
 
 ## Contenido de esta clase
 
@@ -68,6 +95,33 @@ Crea una clase `Matriz` que represente una matriz 2D de números y soporte:
 7. `__eq__` para comparar dos matrices
 
 Escribe tests de pytest para verificar cada operación.
+
+---
+
+## Cómo entregar esta clase
+
+Las entregas se hacen mediante **Pull Request de `tu-fork/development` a `upstream/development`**.
+
+### Flujo rápido
+
+```bash
+# 1. Asegúrate de estar en tu fork y en development
+git checkout development
+
+# 2. Copia el archivo de ejercicios a la carpeta de entregas
+git show Clase_2:ejercicios.py > ejercicios/clase_2/tu-nombre.py
+
+# 3. Implementa los ejercicios en ese archivo
+
+# 4. Commit y push a tu fork
+git add ejercicios/clase_2/tu-nombre.py
+git commit -m "Clase_2: ejercicios - tu-nombre"
+git push origin development
+```
+
+Abre la PR en GitHub. Comprueba que el destino es `upstream/development`, no `main`.
+
+Para el flujo completo (fork, configuración de `upstream`, sincronización), consulta el README de la rama `development`.
 
 ---
 
