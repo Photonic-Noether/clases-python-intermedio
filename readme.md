@@ -2,8 +2,8 @@
 
 > **Antes de mirar el código, actualiza esta rama:**
 > ```bash
-> git fetch origin
-> git reset --hard origin/Clase_7
+> git fetch upstream
+> git reset --hard upstream/Clase_7
 > ```
 
 ## ¿En qué rama estás?
@@ -16,6 +16,33 @@ Esta rama cubre concurrencia básica en Python con el módulo `threading`: cómo
 git checkout Clase_6   # Ir a la clase anterior
 git checkout Clase_8   # Ir a la siguiente clase
 ```
+
+## Configuración del entorno
+
+La primera vez que trabajes en este repositorio:
+
+```bash
+python -m venv .venv
+```
+
+Actívalo (hazlo una vez por sesión de terminal):
+
+```bash
+# Windows
+.venv\ Scripts\activate
+
+# Mac/Linux
+source .venv/bin/activate
+```
+
+Instala las dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+El entorno virtual vive en `.venv/` y no se sube a Git.
+
 
 ## Contenido de esta clase
 
@@ -66,6 +93,33 @@ Simula descargar contenido de varias URLs en paralelo (sin red real):
 3. Implementa `descargar_paralelo(urls)` — usa `ThreadPoolExecutor`
 4. Mide el tiempo de cada versión con `time.perf_counter()`
 5. Verifica que el paralelo es ~N veces más rápido con un patrón productor-consumidor usando `Queue`
+
+---
+
+## Cómo entregar esta clase
+
+Las entregas se hacen mediante **Pull Request de `tu-fork/development` a `upstream/development`**.
+
+### Flujo rápido
+
+```bash
+# 1. Asegúrate de estar en tu fork y en development
+git checkout development
+
+# 2. Copia el archivo de ejercicios a la carpeta de entregas
+git show Clase_7:ejercicios.py > ejercicios/clase_7/tu-nombre.py
+
+# 3. Implementa los ejercicios en ese archivo
+
+# 4. Commit y push a tu fork
+git add ejercicios/clase_7/tu-nombre.py
+git commit -m "Clase_7: ejercicios - tu-nombre"
+git push origin development
+```
+
+Abre la PR en GitHub. Comprueba que el destino es `upstream/development`, no `main`.
+
+Para el flujo completo (fork, configuración de `upstream`, sincronización), consulta el README de la rama `development`.
 
 ---
 
