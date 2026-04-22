@@ -29,7 +29,7 @@ Actívalo (hazlo una vez por sesión de terminal):
 
 ```bash
 # Windows
-.venv\ Scripts\activate
+.venv\Scripts\activate
 
 # Mac/Linux
 source .venv/bin/activate
