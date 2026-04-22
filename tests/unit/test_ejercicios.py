@@ -1,5 +1,5 @@
 import pytest
-from ejercicios import Vector, pipeline, Pila
+from ejercicios.clase_2.ejercicios import Vector, pipeline, Pila
 
 
 # ── Tests de Vector ───────────────────────────────────────────
@@ -37,7 +37,7 @@ def test_pipeline_una_funcion():
 
 def test_pipeline_dos_funciones():
     op = pipeline(lambda x: x * 2, lambda x: x + 1)
-    assert op(5) == 11  # 5*2=10, 10+1=11
+    assert op(5) == 11
 
 
 def test_pipeline_sin_funciones():
@@ -48,7 +48,6 @@ def test_pipeline_sin_funciones():
 
 def test_pipeline_tres_funciones():
     op = pipeline(lambda x: x + 1, lambda x: x * 2, lambda x: x - 3)
-    # (5-3)*2+1 = 5
     assert op(5) == 5
 
 
