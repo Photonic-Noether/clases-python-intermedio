@@ -4,12 +4,12 @@ Repositorio del curso de Python Intermedio de Tajamar, impartido por Joaquín He
 
 ## Cómo está organizado este repositorio
 
-El repositorio usa **una rama de Git por clase**. La rama `main` solo contiene este README; el código y los ejercicios están en las ramas de clase.
+El repositorio usa **una rama de Git por clase**. La rama `main` solo contiene este README; el código y los ejercicios están en las ramas de clase. Las entregas se hacen mediante Pull Request a `development`.
 
 | Rama | Contenido |
 |------|-----------|
 | `main` | README del curso completo |
-| `development` | Rama de integración — aquí se entregan los ejercicios |
+| `development` | Carpeta de entregas (`ejercicios/`) + guía de entrega |
 | `Clase_1` | Herramientas de proyectos y git avanzado |
 | `Clase_2` | Programación funcional y OOP avanzada |
 | `Clase_3` | Iteradores, generadores y corrutinas |
@@ -21,24 +21,36 @@ El repositorio usa **una rama de Git por clase**. La rama `main` solo contiene e
 | `alumnos` | Sandbox de práctica libre |
 
 Cada rama de clase contiene:
+- `readme.md` — instrucciones y descripción de la clase
 - `apuntes.py` — teoría con código ejecutable y comentarios extensos
 - `codigo/` — módulos Python importables con los ejemplos de la clase
 - `ejercicios.py` — 3 ejercicios sin solución para practicar
 - `tests/` — tests de pytest que validan tu solución
 - `run_tests.py` — lanza los tests con un solo comando
+- `requirements.txt` — dependencias (pytest)
 
 ---
 
 ## Configuración inicial (solo una vez)
 
-Clona el repositorio:
+### 1. Haz un fork del repositorio
+
+En GitHub, haz clic en **Fork** (arriba a la derecha). Esto crea una copia del repositorio bajo tu cuenta.
+
+### 2. Clona tu fork
 
 ```bash
-git clone https://github.com/Photonic-Noether/clases-python-intermedio.git
+git clone https://github.com/TU-USUARIO/clases-python-intermedio.git
 cd clases-python-intermedio
 ```
 
-Crea el entorno virtual en la raíz del repositorio:
+### 3. Añade el repositorio original como `upstream`
+
+```bash
+git remote add upstream https://github.com/Photonic-Noether/clases-python-intermedio.git
+```
+
+### 4. Crea el entorno virtual
 
 ```bash
 python -m venv .venv
@@ -54,14 +66,13 @@ Actívalo:
 source .venv/bin/activate
 ```
 
-Cambia a la primera clase e instala las dependencias:
+Instala las dependencias:
 
 ```bash
-git checkout Clase_1
 pip install -r requirements.txt
 ```
 
-El entorno virtual vive en `.venv/` y **no se sube a Git** (está en `.gitignore`). Puedes cambiar de rama libremente y el `.venv/` permanece porque Git lo ignora. Actívalo una vez por sesión de terminal.
+El entorno virtual vive en `.venv/` y **no se sube a Git** (está en `.gitignore`). Actívalo una vez por sesión de terminal.
 
 ---
 
@@ -78,14 +89,14 @@ git checkout main        # Volver al README general
 
 ## Cómo actualizar una rama (método seguro)
 
-**No uses `git pull` directamente en las ramas de clase.** Si has modificado algún archivo accidentalmente y luego haces `git pull`, Git puede fallar por conflictos de ramas divergentes. Usa siempre este método en su lugar:
+**No uses `git pull` directamente.** Si has modificado algún archivo accidentalmente y luego haces `git pull`, Git puede fallar por conflictos de ramas divergentes. Usa siempre este método:
 
 ```bash
-git fetch origin
-git reset --hard origin/Clase_1   # Sustituye Clase_1 por la rama que quieras
+git fetch upstream
+git reset --hard upstream/Clase_1   # Sustituye Clase_1 por la rama que quieras
 ```
 
-`git fetch origin` descarga los cambios del servidor sin aplicarlos. `git reset --hard` descarta cualquier cambio local y deja la rama exactamente igual que el servidor. **Este método siempre funciona**, incluso si tienes commits accidentales o el historial divergió.
+`git fetch upstream` descarga los cambios del servidor sin aplicarlos. `git reset --hard` descarta cualquier cambio local y deja la rama exactamente igual que el servidor. **Este método siempre funciona**, incluso si tienes commits accidentales o el historial divergió.
 
 ---
 
@@ -101,24 +112,24 @@ fatal: Need to specify how to reconcile divergent branches.
 No entres en pánico. Significa que tu rama local y la del servidor han divergido. La solución:
 
 ```bash
-git fetch origin
-git reset --hard origin/Clase_N   # Sustituye Clase_N por la rama donde estás
+git fetch upstream
+git reset --hard upstream/Clase_N   # Sustituye Clase_N por la rama donde estás
 ```
 
 Si tenías trabajo que no quieres perder, guárdalo antes de hacer el reset:
 
 ```bash
-git stash                          # Guarda los cambios en un área temporal
-git fetch origin
-git reset --hard origin/Clase_N
-git stash pop                      # Recupera los cambios guardados
+git stash                            # Guarda los cambios en un área temporal
+git fetch upstream
+git reset --hard upstream/Clase_N
+git stash pop                        # Recupera los cambios guardados
 ```
 
 ---
 
 ## Cómo ejecutar los tests
 
-En cada rama de clase hay un archivo `run_tests.py`. Con el entorno virtual activado, desde la raíz de la rama:
+En cada rama de clase hay un archivo `run_tests.py`. Con el entorno virtual activado:
 
 ```bash
 python run_tests.py
@@ -130,37 +141,67 @@ Verás los tests en verde (pasan) o rojo (fallan). Cuando implementes los ejerci
 
 ## Cómo entregar ejercicios
 
-Los ejercicios se entregan mediante **Pull Request a la rama `development`**. La rama `main` está protegida y no recibe PRs de alumnos.
+Las entregas se hacen mediante **Pull Request de `tu-fork/development` a `upstream/development`**. La rama `main` está protegida y no recibe PRs de alumnos.
 
-Flujo completo paso a paso:
+### Por qué `development` y no `main`
 
-```bash
-# 1. Ve a la rama de tu clase y actualízala
-git checkout Clase_1
-git fetch origin
-git reset --hard origin/Clase_1
+La rama `main` está protegida: solo el profesor puede escribir en ella. La rama `development` es la rama de integración diseñada para recibir vuestras entregas.
 
-# 2. Crea una rama personal para tu entrega
-git checkout -b entrega/Clase_1-tu-nombre
+### Estructura de entregas
 
-# 3. Implementa los ejercicios en ejercicios.py
+En `development` hay una carpeta `ejercicios/` con una subcarpeta por clase:
 
-# 4. Comprueba que los tests pasan
-python run_tests.py
-
-# 5. Sube tu rama y abre la PR
-git add ejercicios.py
-git commit -m "Clase 1: ejercicios - tu-nombre"
-git push origin entrega/Clase_1-tu-nombre
+```
+ejercicios/
+├── clase_1/   ← deposita aquí tu archivo para la Clase 1
+├── clase_2/
+├── clase_3/
+├── clase_4/
+├── clase_5/
+├── clase_6/
+├── clase_7/
+└── clase_8/
 ```
 
-Luego ve a GitHub — verás un botón para abrir la Pull Request. Asegúrate de que el destino es `development`, **no `main`**.
+### Flujo completo de entrega
+
+```bash
+# 1. Sincroniza tu fork con el repositorio original
+git fetch upstream
+git checkout development
+git merge upstream/development
+git push origin development
+
+# 2. Obtén el archivo de ejercicios de la clase
+git show Clase_1:ejercicios.py > ejercicios/clase_1/tu-nombre.py
+
+# 3. Implementa los ejercicios en ejercicios/clase_1/tu-nombre.py
+
+# 4. Comprueba que los tests pasan (cambia temporalmente a la rama de clase)
+git stash
+git checkout Clase_1
+# copia tu archivo a ejercicios.py y ejecuta:
+python run_tests.py
+# cuando pasen, vuelve:
+git checkout development
+git stash pop
+
+# 5. Haz commit y sube a tu fork
+git add ejercicios/clase_1/tu-nombre.py
+git commit -m "Clase 1: ejercicios - tu-nombre"
+git push origin development
+```
+
+Luego ve a tu fork en GitHub y abre la Pull Request. Asegúrate de que el destino es `development`, **no `main`**.
 
 **Normas de entrega:**
-- Las PR van siempre a `development`, nunca a `main`
-- El nombre de la rama de entrega sigue el formato `entrega/Clase_N-tu-nombre`
-- Solo modifica `ejercicios.py` — no toques `apuntes.py`, `codigo/` ni `tests/`
-- Asegúrate de que `python run_tests.py` no da errores antes de abrir la PR
+- El archivo se llama `tu-nombre.py` (sin espacios ni tildes)
+- Va en la subcarpeta correcta: `ejercicios/clase_N/`
+- La PR va de `tu-fork/development` → `upstream/development`
+- Asegúrate de que los tests pasan antes de abrir la PR
+- No toques los archivos de otros alumnos
+
+Para la guía completa del flujo fork+PR, consulta el README de la rama `development`.
 
 ---
 
