@@ -92,7 +92,7 @@ git reset --hard upstream/Clase_1
 Copia el archivo de ejercicios a la carpeta de entregas de `development`:
 
 ```bash
-git show Clase_1:ejercicios.py > /tmp/ejercicios_clase1.py
+git show Clase_1:ejercicios/clase_1/ejercicios.py > /tmp/ejercicios_clase1.py
 ```
 
 Vuelve a `development` en tu fork, pega el archivo y trabaja en él:
@@ -108,21 +108,20 @@ Implementa los ejercicios en `ejercicios/clase_1/tu-nombre.py`.
 
 ### Paso 6 — Comprueba que los tests pasan
 
-Los tests están en la rama de clase. Para ejecutarlos, copia también el archivo de tests:
+Los tests están en `tests/unit/` e `tests/integration/` de la rama de clase. La forma más sencilla de probarlos es:
 
 ```bash
-git show Clase_1:tests/test_ejercicios.py > /tmp/test_ejercicios.py
+git stash
+git checkout Clase_1
+cp /tmp/ejercicios_clase1.py ejercicios/clase_1/ejercicios.py
+pytest
+git checkout development
+git stash pop
 ```
 
-Luego corre pytest apuntando a tu archivo:
+El `pyproject.toml` de cada rama ya está configurado para que `pytest` encuentre los tests automáticamente. Cuando todos pasen en verde, vuelve a `development`.
 
-```bash
-pytest /tmp/test_ejercicios.py --import-mode=importlib \
-    --override-ini="python_files=test_*.py" \
-    -v
-```
-
-O más sencillo: cambia temporalmente a la rama de clase, pega tu implementación en `ejercicios.py` y ejecuta `python run_tests.py`. Cuando pasen, vuelve a `development`.
+Con `pytest` sin argumentos descubre automáticamente `tests/unit/` y `tests/integration/`.
 
 ---
 
