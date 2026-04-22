@@ -2,8 +2,8 @@
 
 > **Antes de mirar el código, actualiza esta rama:**
 > ```bash
-> git fetch origin
-> git reset --hard origin/Clase_4
+> git fetch upstream
+> git reset --hard upstream/Clase_4
 > ```
 
 ## ¿En qué rama estás?
@@ -16,6 +16,33 @@ Esta rama cubre las técnicas más avanzadas de programación funcional en Pytho
 git checkout Clase_3   # Ir a la clase anterior
 git checkout Clase_5   # Ir a la siguiente clase
 ```
+
+## Configuración del entorno
+
+La primera vez que trabajes en este repositorio:
+
+```bash
+python -m venv .venv
+```
+
+Actívalo (hazlo una vez por sesión de terminal):
+
+```bash
+# Windows
+.venv\ Scripts\activate
+
+# Mac/Linux
+source .venv/bin/activate
+```
+
+Instala las dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+El entorno virtual vive en `.venv/` y no se sube a Git.
+
 
 ## Contenido de esta clase
 
@@ -64,6 +91,33 @@ Crea un sistema donde las funciones declaran sus validaciones con decoradores:
 3. `@registro` — registra cada llamada (función, argumentos, resultado) en una lista global
 4. Apila los tres decoradores sobre una función `calcular_precio(cantidad, precio_unitario)`
 5. Escribe tests que verifiquen que los errores se lanzan correctamente y el registro funciona
+
+---
+
+## Cómo entregar esta clase
+
+Las entregas se hacen mediante **Pull Request de `tu-fork/development` a `upstream/development`**.
+
+### Flujo rápido
+
+```bash
+# 1. Asegúrate de estar en tu fork y en development
+git checkout development
+
+# 2. Copia el archivo de ejercicios a la carpeta de entregas
+git show Clase_4:ejercicios.py > ejercicios/clase_4/tu-nombre.py
+
+# 3. Implementa los ejercicios en ese archivo
+
+# 4. Commit y push a tu fork
+git add ejercicios/clase_4/tu-nombre.py
+git commit -m "Clase_4: ejercicios - tu-nombre"
+git push origin development
+```
+
+Abre la PR en GitHub. Comprueba que el destino es `upstream/development`, no `main`.
+
+Para el flujo completo (fork, configuración de `upstream`, sincronización), consulta el README de la rama `development`.
 
 ---
 
