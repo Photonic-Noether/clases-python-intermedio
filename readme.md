@@ -2,8 +2,8 @@
 
 > **Antes de mirar el código, actualiza esta rama:**
 > ```bash
-> git fetch origin
-> git reset --hard origin/Clase_5
+> git fetch upstream
+> git reset --hard upstream/Clase_5
 > ```
 
 ## ¿En qué rama estás?
@@ -16,6 +16,33 @@ Esta rama cubre unit testing e integration testing con pytest: fixtures, paramet
 git checkout Clase_4   # Ir a la clase anterior
 git checkout Clase_6   # Ir a la siguiente clase
 ```
+
+## Configuración del entorno
+
+La primera vez que trabajes en este repositorio:
+
+```bash
+python -m venv .venv
+```
+
+Actívalo (hazlo una vez por sesión de terminal):
+
+```bash
+# Windows
+.venv\ Scripts\activate
+
+# Mac/Linux
+source .venv/bin/activate
+```
+
+Instala las dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+El entorno virtual vive en `.venv/` y no se sube a Git.
+
 
 ## Contenido de esta clase
 
@@ -71,6 +98,33 @@ El módulo `codigo/banco.py` tiene una clase `CuentaBancaria` con bugs. Tu misi�
 3. Corrige los bugs en `codigo/banco.py` hasta que todos los tests pasen
 4. Añade al menos 3 fixtures y usa `@pytest.mark.parametrize` en algún test
 5. Usa `monkeypatch` para testear el método que llama a una API externa
+
+---
+
+## Cómo entregar esta clase
+
+Las entregas se hacen mediante **Pull Request de `tu-fork/development` a `upstream/development`**.
+
+### Flujo rápido
+
+```bash
+# 1. Asegúrate de estar en tu fork y en development
+git checkout development
+
+# 2. Copia el archivo de ejercicios a la carpeta de entregas
+git show Clase_5:ejercicios.py > ejercicios/clase_5/tu-nombre.py
+
+# 3. Implementa los ejercicios en ese archivo
+
+# 4. Commit y push a tu fork
+git add ejercicios/clase_5/tu-nombre.py
+git commit -m "Clase_5: ejercicios - tu-nombre"
+git push origin development
+```
+
+Abre la PR en GitHub. Comprueba que el destino es `upstream/development`, no `main`.
+
+Para el flujo completo (fork, configuración de `upstream`, sincronización), consulta el README de la rama `development`.
 
 ---
 
