@@ -6,15 +6,44 @@ Esta rama (`development`) es la rama de integración del curso. Aquí se reciben
 
 ---
 
+## Cómo quedan los ejercicios en el repositorio
+
+Este es el aspecto que tiene la carpeta `ejercicios/` en `upstream/development` conforme los alumnos van entregando. Cada alumno añade **su propio archivo** con su nombre — nunca modifica los de los demás. Por eso nunca hay conflictos de merge.
+
+```
+upstream/development
+└── ejercicios/
+    ├── clase_1/
+    │   ├── .gitkeep           ← placeholder del profesor
+    │   ├── juan-garcia.py     ← PR de Juan
+    │   ├── ana-lopez.py       ← PR de Ana
+    │   └── marta-ruiz.py      ← PR de Marta
+    ├── clase_2/
+    │   ├── .gitkeep
+    │   ├── juan-garcia.py
+    │   └── ana-lopez.py
+    ├── clase_3/
+    │   ├── .gitkeep
+    │   └── juan-garcia.py
+    ...
+
+rama Clase_3 (separada)
+└── ejercicios/
+    └── clase_3/
+        └── ejercicios.py      ← stubs del profesor (punto de partida)
+```
+
+**Por qué no hay conflictos:** `ejercicios.py` (rama Clase_3) y `juan-garcia.py` (development) son nombres distintos en la misma carpeta — git los combina sin problema. Y cada alumno usa su propio nombre, así que ninguna PR choca con otra.
+
+---
+
 ## Entrega de ejercicios — guía completa
 
-> **Lee esto antes de nada.** Todo el flujo de entrega funciona sobre esta rama.
+> **Regla de oro: tus PRs siempre van de `tu-fork/development` → `upstream/development`.**
 
 ### Por qué `development` y no `main`
 
-La rama `main` está protegida: solo el profesor puede escribir en ella. No aceptará Pull Requests de alumnos. La rama `development` es la rama de integración diseñada exactamente para recibir vuestras entregas — es donde el profesor revisa el trabajo y lo incorpora al historial del curso.
-
-**Regla de oro: tus PRs siempre van de `tu-fork/development` → `upstream/development`.**
+La rama `main` está protegida: solo el profesor puede escribir en ella. La rama `development` es la rama de integración diseñada para recibir vuestras entregas.
 
 ---
 
@@ -30,8 +59,6 @@ En GitHub, haz clic en **Fork** (arriba a la derecha). Esto crea una copia del r
 git clone https://github.com/TU-USUARIO/clases-python-intermedio.git
 cd clases-python-intermedio
 ```
-
-Sustituye `TU-USUARIO` por tu nombre de usuario de GitHub.
 
 ---
 
@@ -81,51 +108,48 @@ pip install -r requirements.txt
 
 ### Paso 5 — Trabaja en la clase
 
-Cambia a la rama de la clase que toca y obtén los ejercicios:
+Tienes dos métodos equivalentes para obtener los ejercicios y testearlos. Elige el que prefieras.
+
+#### Método A — copiar solo el archivo de ejercicios
 
 ```bash
+# Obtén el archivo de ejercicios desde la rama de clase
 git fetch upstream
-git checkout Clase_1       # o Clase_2, Clase_3...
-git reset --hard upstream/Clase_1
-```
+git show upstream/Clase_1:ejercicios/clase_1/ejercicios.py > ejercicios/clase_1/tu-nombre.py
 
-Copia el archivo de ejercicios a la carpeta de entregas de `development`:
+# Implementa los ejercicios en ese archivo
 
-```bash
-git show Clase_1:ejercicios/clase_1/ejercicios.py > /tmp/ejercicios_clase1.py
-```
-
-Vuelve a `development` en tu fork, pega el archivo y trabaja en él:
-
-```bash
-git checkout development
-cp /tmp/ejercicios_clase1.py ejercicios/clase_1/tu-nombre.py
-```
-
-Implementa los ejercicios en `ejercicios/clase_1/tu-nombre.py`.
-
----
-
-### Paso 6 — Comprueba que los tests pasan
-
-Los tests están en `tests/unit/` e `tests/integration/` de la rama de clase. La forma más sencilla de probarlos es:
-
-```bash
+# Para testear, copia temporalmente a la rama de clase y ejecuta pytest:
 git stash
-git checkout Clase_1
-cp /tmp/ejercicios_clase1.py ejercicios/clase_1/ejercicios.py
-pytest
-git checkout development
+git checkout upstream/Clase_1 -- .   # trae todos los archivos de clase al área de trabajo
+cp ejercicios/clase_1/tu-nombre.py ejercicios/clase_1/ejercicios.py
+pytest                                # encuentra tests/ automáticamente gracias a pyproject.toml
+git checkout development              # vuelve a development
 git stash pop
 ```
 
-El `pyproject.toml` de cada rama ya está configurado para que `pytest` encuentre los tests automáticamente. Cuando todos pasen en verde, vuelve a `development`.
+#### Método B — merge directo de la rama de clase
 
-Con `pytest` sin argumentos descubre automáticamente `tests/unit/` y `tests/integration/`.
+```bash
+# Trae todos los archivos de clase (apuntes, tests, código) a tu development
+git fetch upstream
+git checkout development
+git merge upstream/Clase_1
+
+# El archivo de stubs ya está en ejercicios/clase_1/ejercicios.py — renómbralo
+mv ejercicios/clase_1/ejercicios.py ejercicios/clase_1/tu-nombre.py
+
+# Implementa los ejercicios en tu-nombre.py
+
+# Los tests están en tests/unit/ y tests/integration/ — ejecuta directamente:
+pytest
+```
+
+> **Nota sobre el Método B:** el merge trae también `apuntes.py`, `tests/` y `codigo/` a tu rama `development`. La PR incluirá esos archivos, lo que está bien — el profesor sabe ignorarlos y solo revisa `ejercicios/clase_N/tu-nombre.py`.
 
 ---
 
-### Paso 7 — Haz commit y sube a tu fork
+### Paso 6 — Haz commit y sube a tu fork
 
 ```bash
 git add ejercicios/clase_1/tu-nombre.py
@@ -135,7 +159,7 @@ git push origin development
 
 ---
 
-### Paso 8 — Abre la Pull Request
+### Paso 7 — Abre la Pull Request
 
 Ve a tu fork en GitHub. Verás un botón **"Compare & pull request"**. Haz clic.
 
@@ -159,53 +183,25 @@ Antes de empezar cada clase, sincroniza tu fork con el repositorio original:
 ```bash
 git fetch upstream
 git checkout development
-git merge upstream/development   # o git reset --hard upstream/development
+git merge upstream/development
 git push origin development
 ```
 
 ---
 
-## Estructura de la carpeta `ejercicios/`
-
-```
-ejercicios/
-├── clase_1/
-│   ├── alumno1.py
-│   ├── alumno2.py
-│   └── ...
-├── clase_2/
-│   └── ...
-├── clase_3/
-│   └── ...
-├── clase_4/
-│   └── ...
-├── clase_5/
-│   └── ...
-├── clase_6/
-│   └── ...
-├── clase_7/
-│   └── ...
-└── clase_8/
-    └── ...
-```
-
-Cada alumno añade su archivo con el formato `tu-nombre.py` dentro de la subcarpeta de su clase. No toques los archivos de otros alumnos.
-
----
-
 ## Normas de entrega
 
-- El archivo se llama `tu-nombre.py` (sin espacios, sin tildes)
+- El archivo se llama `tu-nombre.py` (sin espacios, sin tildes) — p.ej. `juan-garcia.py`
 - Va en la subcarpeta correcta: `ejercicios/clase_N/`
 - La PR va siempre de `tu-fork/development` → `upstream/development`
-- Asegúrate de que los tests pasan antes de abrir la PR
-- No modifiques `apuntes.py`, `tests/` ni los archivos de otros alumnos
+- Asegúrate de que los tests pasan (`pytest`) antes de abrir la PR
+- No modifiques los archivos de otros alumnos
 
 ---
 
 ## Organización del repositorio
 
-El repositorio usa **una rama por clase**. Esta rama (`development`) solo contiene este README y la carpeta `ejercicios/`. El código y los apuntes están en las ramas de clase.
+El repositorio usa **una rama por clase**. Esta rama (`development`) contiene este README y la carpeta `ejercicios/`. El código y los apuntes están en las ramas de clase.
 
 | Rama | Contenido |
 |------|-----------|
