@@ -1,44 +1,61 @@
-# Python Intermedio — Tajamar
+# Python Intermedio — Tajamar · Rama `development`
 
 Repositorio del curso de Python Intermedio de Tajamar, impartido por Joaquín Hernández.
 
-## Cómo está organizado este repositorio
-
-El repositorio usa **una rama de Git por clase**. La rama `main` solo contiene este README; el código y los ejercicios están en las ramas de clase.
-
-| Rama | Contenido |
-|------|-----------|
-| `main` | README del curso completo |
-| `development` | Rama de integración — aquí se entregan los ejercicios |
-| `Clase_1` | Herramientas de proyectos y git avanzado |
-| `Clase_2` | Programación funcional y OOP avanzada |
-| `Clase_3` | Iteradores, generadores y corrutinas |
-| `Clase_4` | Closures, callbacks, memoization y decoradores |
-| `Clase_5` | Unit testing e integration testing con pytest |
-| `Clase_6` | Librería estándar 1 + Type hinting y genéricos |
-| `Clase_7` | Concurrencia básica: Hilos |
-| `Clase_8` | Librería estándar 2 + ABCs vs Protocolos + Docker |
-| `alumnos` | Sandbox de práctica libre |
-
-Cada rama de clase contiene:
-- `apuntes.py` — teoría con código ejecutable y comentarios extensos
-- `codigo/` — módulos Python importables con los ejemplos de la clase
-- `ejercicios.py` — 3 ejercicios sin solución para practicar
-- `tests/` — tests de pytest que validan tu solución
-- `run_tests.py` — lanza los tests con un solo comando
+Esta rama (`development`) es la rama de integración del curso. Aquí se reciben todas las entregas de ejercicios mediante Pull Request desde el fork de cada alumno.
 
 ---
 
-## Configuración inicial (solo una vez)
+## Entrega de ejercicios — guía completa
 
-Clona el repositorio:
+> **Lee esto antes de nada.** Todo el flujo de entrega funciona sobre esta rama.
+
+### Por qué `development` y no `main`
+
+La rama `main` está protegida: solo el profesor puede escribir en ella. No aceptará Pull Requests de alumnos. La rama `development` es la rama de integración diseñada exactamente para recibir vuestras entregas — es donde el profesor revisa el trabajo y lo incorpora al historial del curso.
+
+**Regla de oro: tus PRs siempre van de `tu-fork/development` → `upstream/development`.**
+
+---
+
+### Paso 1 — Haz un fork del repositorio
+
+En GitHub, haz clic en **Fork** (arriba a la derecha). Esto crea una copia del repositorio bajo tu cuenta. Solo necesitas hacerlo una vez en todo el curso.
+
+---
+
+### Paso 2 — Clona tu fork
 
 ```bash
-git clone https://github.com/Photonic-Noether/clases-python-intermedio.git
+git clone https://github.com/TU-USUARIO/clases-python-intermedio.git
 cd clases-python-intermedio
 ```
 
-Crea el entorno virtual en la raíz del repositorio:
+Sustituye `TU-USUARIO` por tu nombre de usuario de GitHub.
+
+---
+
+### Paso 3 — Añade el repositorio original como `upstream`
+
+```bash
+git remote add upstream https://github.com/Photonic-Noether/clases-python-intermedio.git
+```
+
+Verifica que tienes los dos remotos:
+
+```bash
+git remote -v
+# origin    https://github.com/TU-USUARIO/clases-python-intermedio.git (fetch)
+# origin    https://github.com/TU-USUARIO/clases-python-intermedio.git (push)
+# upstream  https://github.com/Photonic-Noether/clases-python-intermedio.git (fetch)
+# upstream  https://github.com/Photonic-Noether/clases-python-intermedio.git (push)
+```
+
+Solo necesitas hacer esto una vez.
+
+---
+
+### Paso 4 — Configura el entorno virtual
 
 ```bash
 python -m venv .venv
@@ -54,113 +71,156 @@ Actívalo:
 source .venv/bin/activate
 ```
 
-Cambia a la primera clase e instala las dependencias:
+Instala las dependencias:
 
 ```bash
-git checkout Clase_1
 pip install -r requirements.txt
 ```
 
-El entorno virtual vive en `.venv/` y **no se sube a Git** (está en `.gitignore`). Puedes cambiar de rama libremente y el `.venv/` permanece porque Git lo ignora. Actívalo una vez por sesión de terminal.
+---
+
+### Paso 5 — Trabaja en la clase
+
+Cambia a la rama de la clase que toca y obtén los ejercicios:
+
+```bash
+git fetch upstream
+git checkout Clase_1       # o Clase_2, Clase_3...
+git reset --hard upstream/Clase_1
+```
+
+Copia el archivo de ejercicios a la carpeta de entregas de `development`:
+
+```bash
+git show Clase_1:ejercicios.py > /tmp/ejercicios_clase1.py
+```
+
+Vuelve a `development` en tu fork, pega el archivo y trabaja en él:
+
+```bash
+git checkout development
+cp /tmp/ejercicios_clase1.py ejercicios/clase_1/tu-nombre.py
+```
+
+Implementa los ejercicios en `ejercicios/clase_1/tu-nombre.py`.
 
 ---
 
-## Cómo cambiar de rama
+### Paso 6 — Comprueba que los tests pasan
+
+Los tests están en la rama de clase. Para ejecutarlos, copia también el archivo de tests:
 
 ```bash
-git checkout Clase_1     # Ir a la clase 1
-git checkout Clase_2     # Ir a la clase 2
-git checkout alumnos     # Ir a la rama de práctica
-git checkout main        # Volver al README general
+git show Clase_1:tests/test_ejercicios.py > /tmp/test_ejercicios.py
 ```
+
+Luego corre pytest apuntando a tu archivo:
+
+```bash
+pytest /tmp/test_ejercicios.py --import-mode=importlib \
+    --override-ini="python_files=test_*.py" \
+    -v
+```
+
+O más sencillo: cambia temporalmente a la rama de clase, pega tu implementación en `ejercicios.py` y ejecuta `python run_tests.py`. Cuando pasen, vuelve a `development`.
 
 ---
 
-## Cómo actualizar una rama (método seguro)
-
-**No uses `git pull` directamente en las ramas de clase.** Si has modificado algún archivo accidentalmente y luego haces `git pull`, Git puede fallar por conflictos de ramas divergentes. Usa siempre este método en su lugar:
+### Paso 7 — Haz commit y sube a tu fork
 
 ```bash
-git fetch origin
-git reset --hard origin/Clase_1   # Sustituye Clase_1 por la rama que quieras
-```
-
-`git fetch origin` descarga los cambios del servidor sin aplicarlos. `git reset --hard` descarta cualquier cambio local y deja la rama exactamente igual que el servidor. **Este método siempre funciona**, incluso si tienes commits accidentales o el historial divergió.
-
----
-
-## Si `git pull` da error
-
-Si ves algo como esto:
-
-```
-hint: You have divergent branches and need to specify how to reconcile them.
-fatal: Need to specify how to reconcile divergent branches.
-```
-
-No entres en pánico. Significa que tu rama local y la del servidor han divergido. La solución:
-
-```bash
-git fetch origin
-git reset --hard origin/Clase_N   # Sustituye Clase_N por la rama donde estás
-```
-
-Si tenías trabajo que no quieres perder, guárdalo antes de hacer el reset:
-
-```bash
-git stash                          # Guarda los cambios en un área temporal
-git fetch origin
-git reset --hard origin/Clase_N
-git stash pop                      # Recupera los cambios guardados
-```
-
----
-
-## Cómo ejecutar los tests
-
-En cada rama de clase hay un archivo `run_tests.py`. Con el entorno virtual activado, desde la raíz de la rama:
-
-```bash
-python run_tests.py
-```
-
-Verás los tests en verde (pasan) o rojo (fallan). Cuando implementes los ejercicios en `ejercicios.py` y todos los tests pasen, tu solución es correcta.
-
----
-
-## Cómo entregar ejercicios
-
-Los ejercicios se entregan mediante **Pull Request a la rama `development`**. La rama `main` está protegida y no recibe PRs de alumnos.
-
-Flujo completo paso a paso:
-
-```bash
-# 1. Ve a la rama de tu clase y actualízala
-git checkout Clase_1
-git fetch origin
-git reset --hard origin/Clase_1
-
-# 2. Crea una rama personal para tu entrega
-git checkout -b entrega/Clase_1-tu-nombre
-
-# 3. Implementa los ejercicios en ejercicios.py
-
-# 4. Comprueba que los tests pasan
-python run_tests.py
-
-# 5. Sube tu rama y abre la PR
-git add ejercicios.py
+git add ejercicios/clase_1/tu-nombre.py
 git commit -m "Clase 1: ejercicios - tu-nombre"
-git push origin entrega/Clase_1-tu-nombre
+git push origin development
 ```
 
-Luego ve a GitHub — verás un botón para abrir la Pull Request. Asegúrate de que el destino es `development`, **no `main`**.
+---
 
-**Normas de entrega:**
-- Las PR van siempre a `development`, nunca a `main`
-- El nombre de la rama de entrega sigue el formato `entrega/Clase_N-tu-nombre`
-- Solo modifica `ejercicios.py` — no toques `apuntes.py`, `codigo/` ni `tests/`
-- Asegúrate de que `python run_tests.py` no da errores antes de abrir la PR
+### Paso 8 — Abre la Pull Request
+
+Ve a tu fork en GitHub. Verás un botón **"Compare & pull request"**. Haz clic.
+
+Comprueba que los campos son:
+
+| Campo | Valor |
+|-------|-------|
+| **base repository** | `Photonic-Noether/clases-python-intermedio` |
+| **base** | `development` |
+| **head repository** | `TU-USUARIO/clases-python-intermedio` |
+| **compare** | `development` |
+
+Escribe un título claro (`Clase 1: ejercicios - tu-nombre`) y haz clic en **Create pull request**.
+
+---
+
+### Mantener tu fork actualizado
+
+Antes de empezar cada clase, sincroniza tu fork con el repositorio original:
+
+```bash
+git fetch upstream
+git checkout development
+git merge upstream/development   # o git reset --hard upstream/development
+git push origin development
+```
+
+---
+
+## Estructura de la carpeta `ejercicios/`
+
+```
+ejercicios/
+├── clase_1/
+│   ├── alumno1.py
+│   ├── alumno2.py
+│   └── ...
+├── clase_2/
+│   └── ...
+├── clase_3/
+│   └── ...
+├── clase_4/
+│   └── ...
+├── clase_5/
+│   └── ...
+├── clase_6/
+│   └── ...
+├── clase_7/
+│   └── ...
+└── clase_8/
+    └── ...
+```
+
+Cada alumno añade su archivo con el formato `tu-nombre.py` dentro de la subcarpeta de su clase. No toques los archivos de otros alumnos.
+
+---
+
+## Normas de entrega
+
+- El archivo se llama `tu-nombre.py` (sin espacios, sin tildes)
+- Va en la subcarpeta correcta: `ejercicios/clase_N/`
+- La PR va siempre de `tu-fork/development` → `upstream/development`
+- Asegúrate de que los tests pasan antes de abrir la PR
+- No modifiques `apuntes.py`, `tests/` ni los archivos de otros alumnos
+
+---
+
+## Organización del repositorio
+
+El repositorio usa **una rama por clase**. Esta rama (`development`) solo contiene este README y la carpeta `ejercicios/`. El código y los apuntes están en las ramas de clase.
+
+| Rama | Contenido |
+|------|-----------|
+| `main` | README del curso completo |
+| `development` | Carpeta de entregas + este README |
+| `Clase_1` | Herramientas de proyectos y git avanzado |
+| `Clase_2` | Programación funcional y OOP avanzada |
+| `Clase_3` | Iteradores, generadores y corrutinas |
+| `Clase_4` | Closures, callbacks, memoization y decoradores |
+| `Clase_5` | Unit testing e integration testing con pytest |
+| `Clase_6` | Librería estándar 1 + Type hinting y genéricos |
+| `Clase_7` | Concurrencia básica: Hilos |
+| `Clase_8` | Librería estándar 2 + ABCs vs Protocolos + Docker |
+| `alumnos` | Sandbox de práctica libre |
 
 ---
 
@@ -176,39 +236,3 @@ Luego ve a GitHub — verás un botón para abrir la Pull Request. Asegúrate de
 | **Clase 6** | Librería estándar 1 + Type hinting y genéricos. Patrón Puente |
 | **Clase 7** | Concurrencia básica: Hilos (`threading`) |
 | **Clase 8** | Librería estándar 2 + ABCs vs Protocolos. Introducción a Docker |
-
----
-
-## Objetivos de aprendizaje
-
-Al terminar el curso serás capaz de:
-
-- Configurar un proyecto Python profesional con linters, formateadores y hooks de pre-commit
-- Usar técnicas de programación funcional avanzada y OOP robusta
-- Implementar iteradores, generadores y corrutinas propios
-- Crear y combinar decoradores complejos con y sin argumentos
-- Escribir tests unitarios y de integración con pytest siguiendo buenas prácticas
-- Usar type hints y genéricos para escribir código más robusto y mantenible
-- Aplicar los patrones de diseño más usados en Python
-- Escribir código concurrente básico con hilos
-- Contenerizar una aplicación Python con Docker
-
----
-
-## Requisitos previos
-
-- Python 3.11 o superior instalado
-- Git instalado y configurado (`git config --global user.name "Tu Nombre"` y `git config --global user.email "tu@email.com"`)
-- Cuenta en GitHub
-- Conocimientos básicos de Python: funciones, clases, listas, diccionarios
-
----
-
-## Recursos adicionales
-
-- [Documentación oficial de Python 3](https://docs.python.org/3/)
-- [pytest — documentación oficial](https://docs.pytest.org/)
-- [ruff — linter y formateador](https://docs.astral.sh/ruff/)
-- [Real Python — tutoriales avanzados](https://realpython.com/)
-- [Python Patterns — patrones de diseño en Python](https://python-patterns.guide/)
-- [Fluent Python 2ª edición (libro recomendado)](https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/)
