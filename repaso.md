@@ -639,6 +639,28 @@ diferencia = datetime(2025, 12, 31) - datetime.now()
 diferencia.days    # días hasta fin de año
 ```
 
+### `pickle` — serialización binaria
+
+```python
+import pickle
+
+# Python → bytes (serializar)
+datos = {"nombre": "Ana", "edad": 30, "lista": [1, 2, 3]}
+bytes_datos = pickle.dumps(datos)              # bytes en memoria
+pickle.dump(datos, open("datos.pkl", "wb"))    # escribir a archivo binario
+
+# bytes → Python (deserializar)
+datos = pickle.loads(bytes_datos)
+datos = pickle.load(open("datos.pkl", "rb"))
+
+# Cualquier objeto Python es serializable (clases, funciones, lambdas...)
+# ⚠️  Nunca cargues un .pkl de fuente no confiable — puede ejecutar código arbitrario
+
+# pickle vs json:
+# - pickle: cualquier objeto Python, binario, solo Python
+# - json:   tipos básicos, texto legible, interoperable entre lenguajes
+```
+
 ### `json` — serialización JSON
 
 ```python
