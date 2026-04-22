@@ -109,7 +109,7 @@ Las entregas se hacen mediante **Pull Request de `tu-fork/development` a `upstre
 git checkout development
 
 # 2. Copia el archivo de ejercicios a la carpeta de entregas
-git show Clase_6:ejercicios.py > ejercicios/clase_6/tu-nombre.py
+git show Clase_6:ejercicios/clase_6/ejercicios.py > ejercicios/clase_6/tu-nombre.py
 
 # 3. Implementa los ejercicios en ese archivo
 
