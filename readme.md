@@ -75,9 +75,9 @@ El entorno virtual vive en `.venv/` y no se sube a Git.
 
 ## Ejercicios propuestos
 
-En el archivo `ejercicios.py` encontrarás 3 ejercicios propuestos para practicar. Son de dificultad ligeramente superior al temario y no tienen solución: ¡intenta resolverlos tú!
+En `ejercicios/clase_1/ejercicios.py` encontrarás 3 ejercicios para practicar. Son de dificultad ligeramente superior al temario y no tienen solución: ¡intenta resolverlos tú!
 
-Ejecuta `python run_tests.py` para comprobar si tu solución es correcta.
+Ejecuta `pytest` para comprobar si tu solución es correcta (el `pyproject.toml` ya configura todo).
 
 ## Proyecto propuesto (~30 minutos)
 
@@ -110,7 +110,7 @@ Las entregas se hacen mediante **Pull Request de `tu-fork/development` a `upstre
 git checkout development
 
 # 2. Copia el archivo de ejercicios a la carpeta de entregas
-git show Clase_1:ejercicios.py > ejercicios/clase_1/tu-nombre.py
+git show Clase_1:ejercicios/clase_1/ejercicios.py > ejercicios/clase_1/tu-nombre.py
 
 # 3. Implementa los ejercicios en ese archivo
 
