@@ -1,5 +1,5 @@
 import pytest
-from ejercicios import retry, log_llamadas, REGISTRO, hacer_multiplicador, componer
+from ejercicios.clase_4.ejercicios import retry, log_llamadas, REGISTRO, hacer_multiplicador, componer
 
 
 # ── Tests de retry ────────────────────────────────────────────
@@ -98,4 +98,4 @@ def test_componer_con_lambda():
     sumar_uno = lambda x: x + 1
     cuadrado = lambda x: x ** 2
     cuadrado_mas_uno = componer(sumar_uno, cuadrado)
-    assert cuadrado_mas_uno(3) == 10  # 3**2 = 9, 9+1 = 10
+    assert cuadrado_mas_uno(3) == 10
