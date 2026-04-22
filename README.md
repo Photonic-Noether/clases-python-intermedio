@@ -24,10 +24,14 @@ Cada rama de clase contiene:
 - `readme.md` — instrucciones y descripción de la clase
 - `apuntes.py` — teoría con código ejecutable y comentarios extensos
 - `codigo/` — módulos Python importables con los ejemplos de la clase
-- `ejercicios.py` — 3 ejercicios sin solución para practicar
-- `tests/` — tests de pytest que validan tu solución
-- `run_tests.py` — lanza los tests con un solo comando
-- `requirements.txt` — dependencias (pytest)
+- `ejercicios/clase_N/ejercicios.py` — 3 ejercicios sin solución para practicar
+- `tests/unit/` — tests unitarios
+- `tests/integration/` — tests de integración
+- `tests/conftest.py` — fixtures compartidas
+- `run_tests.py` — lanza los tests con un solo comando (`pytest`)
+- `pyproject.toml` — configuración de pytest, ruff y mypy
+- `requirements.txt` — dependencias (pytest, pre-commit desde Clase 2)
+- `.pre-commit-config.yaml` — hooks de ruff y mypy (Clase 2 en adelante)
 
 ---
 
@@ -135,7 +139,7 @@ En cada rama de clase hay un archivo `run_tests.py`. Con el entorno virtual acti
 python run_tests.py
 ```
 
-Verás los tests en verde (pasan) o rojo (fallan). Cuando implementes los ejercicios en `ejercicios.py` y todos los tests pasen, tu solución es correcta.
+Verás los tests en verde (pasan) o rojo (fallan). Cuando implementes los ejercicios en `ejercicios/clase_N/ejercicios.py` y todos los tests pasen, tu solución es correcta. El `pyproject.toml` ya está configurado para que `pytest` encuentre los tests en `tests/unit/` y `tests/integration/` automáticamente.
 
 ---
 
@@ -173,16 +177,15 @@ git merge upstream/development
 git push origin development
 
 # 2. Obtén el archivo de ejercicios de la clase
-git show Clase_1:ejercicios.py > ejercicios/clase_1/tu-nombre.py
+git show Clase_1:ejercicios/clase_1/ejercicios.py > ejercicios/clase_1/tu-nombre.py
 
 # 3. Implementa los ejercicios en ejercicios/clase_1/tu-nombre.py
 
 # 4. Comprueba que los tests pasan (cambia temporalmente a la rama de clase)
 git stash
 git checkout Clase_1
-# copia tu archivo a ejercicios.py y ejecuta:
-python run_tests.py
-# cuando pasen, vuelve:
+cp ejercicios/clase_1/tu-nombre.py ejercicios/clase_1/ejercicios.py
+pytest            # pyproject.toml lo configura todo automáticamente
 git checkout development
 git stash pop
 
