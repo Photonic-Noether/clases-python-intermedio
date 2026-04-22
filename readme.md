@@ -2,8 +2,8 @@
 
 > **Antes de mirar el código, actualiza esta rama:**
 > ```bash
-> git fetch origin
-> git reset --hard origin/Clase_8
+> git fetch upstream
+> git reset --hard upstream/Clase_8
 > ```
 
 ## ¿En qué rama estás?
@@ -16,6 +16,33 @@ Esta es la última clase del curso. Cubre los módulos más avanzados de la libr
 git checkout Clase_7   # Ir a la clase anterior
 git checkout main      # Volver al README general del curso
 ```
+
+## Configuración del entorno
+
+La primera vez que trabajes en este repositorio:
+
+```bash
+python -m venv .venv
+```
+
+Actívalo (hazlo una vez por sesión de terminal):
+
+```bash
+# Windows
+.venv\ Scripts\activate
+
+# Mac/Linux
+source .venv/bin/activate
+```
+
+Instala las dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+El entorno virtual vive en `.venv/` y no se sube a Git.
+
 
 ## Contenido de esta clase
 
@@ -64,6 +91,33 @@ En el archivo `ejercicios.py` encontrarás 3 ejercicios propuestos. Ejecuta `pyt
 4. Serializa/deserializa datos con un `JSONEncoder` personalizado que soporte `datetime`
 5. Define una `Protocol` para las "vistas" de tu API
 6. Construye la imagen con `docker build` y prueba que funciona con `docker run`
+
+---
+
+## Cómo entregar esta clase
+
+Las entregas se hacen mediante **Pull Request de `tu-fork/development` a `upstream/development`**.
+
+### Flujo rápido
+
+```bash
+# 1. Asegúrate de estar en tu fork y en development
+git checkout development
+
+# 2. Copia el archivo de ejercicios a la carpeta de entregas
+git show Clase_8:ejercicios.py > ejercicios/clase_8/tu-nombre.py
+
+# 3. Implementa los ejercicios en ese archivo
+
+# 4. Commit y push a tu fork
+git add ejercicios/clase_8/tu-nombre.py
+git commit -m "Clase_8: ejercicios - tu-nombre"
+git push origin development
+```
+
+Abre la PR en GitHub. Comprueba que el destino es `upstream/development`, no `main`.
+
+Para el flujo completo (fork, configuración de `upstream`, sincronización), consulta el README de la rama `development`.
 
 ---
 
