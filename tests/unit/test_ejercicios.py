@@ -1,5 +1,5 @@
 import pytest
-from ejercicios import Cola, frecuencia_palabras, Repositorio
+from ejercicios.clase_6.ejercicios import Cola, frecuencia_palabras, Repositorio
 
 
 # ── Tests de Cola[T] ─────────────────────────────────────────
@@ -9,7 +9,7 @@ def test_cola_encolar_desencolar():
     c.encolar(1)
     c.encolar(2)
     c.encolar(3)
-    assert c.desencolar() == 1  # FIFO
+    assert c.desencolar() == 1
     assert c.desencolar() == 2
 
 
@@ -18,7 +18,7 @@ def test_cola_primero():
     c.encolar("a")
     c.encolar("b")
     assert c.primero() == "a"
-    assert len(c) == 2  # primero() no elimina
+    assert len(c) == 2
 
 
 def test_cola_vacia_lanza_error():
@@ -66,6 +66,7 @@ class ProductoMock:
     def __init__(self, id, nombre):
         self.id = id
         self.nombre = nombre
+
 
 def test_repositorio_guardar_obtener():
     repo: Repositorio = Repositorio()
